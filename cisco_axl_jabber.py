@@ -14,12 +14,15 @@ from lxml import etree
 from influxdb import InfluxDBClient
 import argparse
 import os
+import datatime
 
 os.nice(20)
 
 parser = argparse.ArgumentParser()
 
 def build_json(name, devicepool):
+    dUTC = datetime.datetime.utcnow()
+    
     json_body = {
         'measurement': 'jabber_status',
         'tags': {
@@ -30,6 +33,7 @@ def build_json(name, devicepool):
             'statusreason': 'Unknown',
             'activeloadid': 'Unknown'
         },
+        'time': dUTC,
         'fields': {
             'loginuserid': 'Unknown',
             'ipaddress': 'Unknown'
