@@ -19,7 +19,6 @@ os.nice(20)
 
 parser = argparse.ArgumentParser()
 
-
 def build_json(name, devicepool):
     json_body = {
         'measurement': 'jabber_status',
@@ -62,10 +61,7 @@ def main(CUCM_ADDRESS,USERNAME,PASSWORD,VERSION):
     axl_service = axl_client.create_service(axl_binding, axl_location)
 
     # Build Client Object for RisPort70 Service
-
     wsdl = f'https://{CUCM_ADDRESS}:8443/realtimeservice2/services/RISService70?wsdl'
-    
-
     session = Session()
     session.verify = False
     session.auth = HTTPBasicAuth(USERNAME, PASSWORD)
