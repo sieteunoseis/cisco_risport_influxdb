@@ -46,9 +46,10 @@ $ pm2 save or pm2 set pm2:autodump true
 $ pm2 stop all
 $ pm2 show <id|name>
 $ pm2 startup
+$ pm2 monit
 
 ```
-
+[PM2 Quick Start](https://pm2.keymetrics.io/docs/usage/quick-start/)
 
 ### License
 
