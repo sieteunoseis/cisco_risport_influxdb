@@ -1,5 +1,5 @@
 # Cisco CUCM Jabber Stats
-Script to get status of Jabber devices (CSF,TCT,TAB & BOT) via AXL/RisPort and write to InfluxDB
+Script to get status of Jabber devices (CSF,TCT,TAB & BOT) via AXL/RisPort, write to InfluxDB and graph via Grafana
 
 ### Requirements
 
