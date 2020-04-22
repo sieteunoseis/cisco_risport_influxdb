@@ -18,18 +18,18 @@ parser = argparse.ArgumentParser()
 
 def build_json(name, devicepool):
     json_body = {
-        'measurement': 'jabber_reg',
+        'measurement': 'jabber_status',
         'tags': {
             'name': name,
             'devicepool': devicepool,
-            'unifiedcm':''
+            'unifiedcm':'Unknown',
+            'status' : 'Unknown',
+            'statusreason': 'Unknown',
+            'activeloadid': 'Unknown'
         },
         'fields': {
-            'status' : 'Unknown',
-            'loginuserid': '',
-            'statusreason': '',
-            'activeloadid': '',
-            'ipaddress': ''
+            'loginuserid': 'Unknown',
+            'ipaddress': 'Unknown'
         }
     }
         
@@ -37,13 +37,13 @@ def build_json(name, devicepool):
     
 
 # main function
-def main(CUCM_ADDRESS,USERNAME,PASSWORD):
+def main(CUCM_ADDRESS,USERNAME,PASSWORD,VERSION):
     # Common Plugins
     history = HistoryPlugin()
 
     # Build Client Object for AXL Service
     # The WSDL is a local file in the working directory, see README
-    axl_wsdl = 'schema/12.0/AXLAPI.wsdl'
+    axl_wsdl = 'schema/' + VERSION + '/AXLAPI.wsdl'
     axl_location = f'https://{CUCM_ADDRESS}:8443/axl/'
     axl_binding = '{http://www.cisco.com/AXLAPIService/}AXLAPIBinding'
 
@@ -151,18 +151,17 @@ def main(CUCM_ADDRESS,USERNAME,PASSWORD):
                     d = next((search for search in points if search["tags"]["name"] == item.Name), None)
                     
                     d['tags']['unifiedcm'] = CmNode.Name
-                    d['fields']['status'] = item.Status
-                    d['fields']['loginuserid'] = item.LoginUserId
-                    d['fields']['statusreason'] = item.StatusReason
-                    d['fields']['activeloadid'] = item.ActiveLoadID
+                    d['tags']['status'] = item.Status
+                    d['tags']['statusreason'] = item.StatusReason
+                    d['tags']['activeloadid'] = item.ActiveLoadID
                     ipaddresses = item.IPAddress
                     ipaddress = ipaddresses['item'][0]['IP']                    
                     d['fields']['ipaddress'] = ipaddress
+                    d['fields']['loginuserid'] = item.LoginUserId
 
-                                                    
         
     try:
-        client = InfluxDBClient('170.2.96.200', 8086, '', '', 'codecs')
+        client = InfluxDBClient('170.2.96.200', 8086, '', '', 'cisco_risport')
         client.write_points(points,batch_size=100000)    
     except Exception as e:
         print(e)
@@ -173,11 +172,11 @@ def main(CUCM_ADDRESS,USERNAME,PASSWORD):
 
 if __name__ == "__main__":
     disable_warnings(InsecureRequestWarning)
-    parser.add_argument( "-ip","--hostname", required=True, help="Hostname/IP Address" )    
+    parser.add_argument( "-ip","--hostname", required=True, help="Cisco AXL Hostname/IP Address" )    
     parser.add_argument("-u", "--username", required=True, help="User name")
     parser.add_argument("-p", "--password", required=True, help="Password")
+    parser.add_argument("-v", "--version", required=True, help="Version")
 
     args = parser.parse_args()
     
-    main(args.hostname,args.username,args.password)
-
+    main(args.hostname,args.username,args.password,args.version)
