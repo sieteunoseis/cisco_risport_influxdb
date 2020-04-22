@@ -165,7 +165,7 @@ def main(CUCM_ADDRESS,USERNAME,PASSWORD,VERSION):
 
         
     try:
-        client = InfluxDBClient('170.2.96.200', 8086, '', '', 'cisco_risport')
+        client = InfluxDBClient('<INSERT INFLUXDB IP>', 8086, '', '', 'cisco_risport')
         client.write_points(points,batch_size=100000)    
     except Exception as e:
         print(e)
