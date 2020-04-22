@@ -43,6 +43,8 @@ pm2 start  cisco_axl_jabber.py --interpreter python3 --name jabber_status --cron
 ### Graph with Grafana
 ![](https://github.com/sieteunoseis/cisco_risport_influxdb/blob/master/images/Grafana2.png)
 ![](https://github.com/sieteunoseis/cisco_risport_influxdb/blob/master/images/Grafana1.png)
+![](https://github.com/sieteunoseis/cisco_risport_influxdb/blob/master/images/Grafana3.png)
+![](https://github.com/sieteunoseis/cisco_risport_influxdb/blob/master/images/Grafana4.png)
 
 ### Useful PM2 commands
 
