@@ -1,5 +1,5 @@
 # Cisco CUCM Jabber Stats
-Script to get status of Jabber devices (CSF,TCT,TAB & BOT) via AXL and check for status of device in RisPort
+Script to get status of Jabber devices (CSF,TCT,TAB & BOT) via AXL/RisPort and write to InfluxDB
 
 ### Requirements
 
@@ -22,6 +22,15 @@ Processing 3 batch...
 Processing 4 batch...
 Successfully captured current Risport status.
 ...
+```
+
+### InfluxDB setup
+```
+$ influx -precision rfc3339
+> CREATE DATABASE cisco_risport WITH DURATION 90d
+> show databases
+> use cisco_risport
+> show measurements
 ```
 
 ### Automate with PM2
