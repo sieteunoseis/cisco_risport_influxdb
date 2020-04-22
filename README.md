@@ -40,6 +40,8 @@ Run from the commandline
 ```
 pm2 start  cisco_axl_jabber.py --interpreter python3 --name jabber_status --cron '*/5 * * * *' --no-autorestart -- -ip 10.10.20.1 -u administrator -p ciscopsdt -v 12.0
 ```
+### Graph with Grafana
+
 
 ### Useful PM2 commands
 
