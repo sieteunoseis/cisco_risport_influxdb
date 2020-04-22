@@ -13,6 +13,10 @@ from urllib3.exceptions import InsecureRequestWarning
 from lxml import etree
 from influxdb import InfluxDBClient
 import argparse
+import os
+
+os.nice(20)
+
 parser = argparse.ArgumentParser()
 
 
