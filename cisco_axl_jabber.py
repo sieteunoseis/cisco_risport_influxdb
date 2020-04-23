@@ -14,7 +14,7 @@ from lxml import etree
 from influxdb import InfluxDBClient
 import argparse
 import os
-import datatime
+import datetime
 
 os.nice(20)
 
