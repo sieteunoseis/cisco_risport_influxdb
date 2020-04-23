@@ -72,6 +72,8 @@ def main(CUCM_ADDRESS,USERNAME,PASSWORD,VERSION):
     transport = Transport(cache=SqliteCache(), session=session, timeout=20)
     history = HistoryPlugin()
     client = Client(wsdl=wsdl, transport=transport, plugins=[history])
+    service = client.create_service( '{http://schemas.cisco.com/ast/soap}RisBinding',
+        'https://{cucm}:8443/realtimeservice2/services/RISService70'.format( cucm = CUCM_ADDRESS ))
     factory = client.type_factory('ns0')
 
     def show_history():
@@ -140,7 +142,7 @@ def main(CUCM_ADDRESS,USERNAME,PASSWORD,VERSION):
         StateInfo = ''
         
         try:
-            resp = client.service.selectCmDeviceExt( CmSelectionCriteria=criteria, StateInfo=StateInfo )
+            resp = service.selectCmDeviceExt( CmSelectionCriteria=criteria, StateInfo=StateInfo )
         except Fault:
             show_history()
             raise
