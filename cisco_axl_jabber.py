@@ -71,9 +71,11 @@ def main(CUCM_ADDRESS,USERNAME,PASSWORD,VERSION):
     session.auth = HTTPBasicAuth(USERNAME, PASSWORD)
     transport = Transport(cache=SqliteCache(), session=session, timeout=20)
     history = HistoryPlugin()
-    client = Client(wsdl=wsdl, transport=transport, plugins=[history])
+    client = Client( wsdl, transport = transport)
+
     service = client.create_service( '{http://schemas.cisco.com/ast/soap}RisBinding',
         'https://{cucm}:8443/realtimeservice2/services/RISService70'.format( cucm = CUCM_ADDRESS ))
+        
     factory = client.type_factory('ns0')
 
     def show_history():
@@ -98,24 +100,30 @@ def main(CUCM_ADDRESS,USERNAME,PASSWORD,VERSION):
     except Fault:
         show_history()
         raise
+        
+        
 
     # Build item list for RisPort70 SelectCmDeviceExt
     items = []
     # Build item list for output
     points = []
     
-    for phone in csfresp['return'].phone:
-        items.append(factory.SelectItem(Item=phone.name))
-        points.append(build_json(phone.name,phone.devicePoolName['_value_1']))
-    for phone in tctresp['return'].phone:
-        items.append(factory.SelectItem(Item=phone.name))
-        points.append(build_json(phone.name,phone.devicePoolName['_value_1']))
-    for phone in botresp['return'].phone:
-        items.append(factory.SelectItem(Item=phone.name))
-        points.append(build_json(phone.name,phone.devicePoolName['_value_1']))
-    for phone in tabresp['return'].phone:
-        items.append(factory.SelectItem(Item=phone.name))
-        points.append(build_json(phone.name,phone.devicePoolName['_value_1']))
+    if csfresp['return']:
+        for phone in csfresp['return'].phone:
+            items.append(factory.SelectItem(Item=phone.name))
+            points.append(build_json(phone.name,phone.devicePoolName['_value_1']))
+    if tctresp['return']:
+        for phone in tctresp['return'].phone:
+            items.append(factory.SelectItem(Item=phone.name))
+            points.append(build_json(phone.name,phone.devicePoolName['_value_1']))
+    if botresp['return']:
+        for phone in botresp['return'].phone:
+            items.append(factory.SelectItem(Item=phone.name))
+            points.append(build_json(phone.name,phone.devicePoolName['_value_1']))
+    if tabresp['return']:
+        for phone in tabresp['return'].phone:
+            items.append(factory.SelectItem(Item=phone.name))
+            points.append(build_json(phone.name,phone.devicePoolName['_value_1']))
         
     # Lets break this down in chunks of 1000 for RisPort throttling
     chunks = [items[x:x + 1000] for x in range(0, len(items), 1000)]
@@ -167,7 +175,7 @@ def main(CUCM_ADDRESS,USERNAME,PASSWORD,VERSION):
 
         
     try:
-        client = InfluxDBClient('<INSERT INFLUXDB IP>', 8086, '', '', 'cisco_risport')
+        client = InfluxDBClient('localhost', 8086, '', '', 'cisco_risport')
         client.write_points(points,batch_size=100000)    
     except Exception as e:
         print(e)
